@@ -51,6 +51,7 @@ TITLES = {
     # Novas Seções Adicionadas
     "PER USER/UNIT SUBSCRIPTIONS": "mrc",
     "PER BU SUBSCRIPTIONS": "nrc",
+    "CONSULTING": "nrc",
     "USAGE PRODUCTS": "usage",
     "IMPLEMENTATION & TRAINING": "nrc",
     "MONTHLY LOOP QUOTE SUBSCRIPTIONS": "connectivity_mrc",
@@ -85,8 +86,9 @@ def parse_price(s):
     """Converte strings monetárias para float."""
     if s is None:
         return None
-    s = re.sub(r"\s+", "", s)          # remove espaços e quebras de linha primeiro
-    s = s.replace("R$", "").replace("$", "").replace(",", "")
+    s = re.sub(r"\s+", "", s) # remove espaços e quebras de linha primeiro
+    s = re.sub(r"(?i)(BRL|USD)", "", s)
+    s = s.replace("R$", "").replace("US$", "").replace("$", "").replace(",", "")
     try:
         return float(s)
     except ValueError:
