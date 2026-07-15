@@ -59,6 +59,13 @@ def gerar_excel():
 # =====================================================================
 root = tk.Tk()
 root.title("Extrator de Cotações NiCE")
+
+# Ícone da janela (precisa do mesmo esquema de caminho do template)
+try:
+    root.iconbitmap(os.path.join(BASE_DIR, "utils", "icon.ico"))
+except Exception:
+    pass  # não quebra o app se o ícone não for encontrado
+
 root.geometry("600x180")
 root.resizable(False, False)
 

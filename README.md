@@ -56,10 +56,7 @@ source venv/bin/activate
 pip install --upgrade pip
 pip install openpyxl pdfplumber pyinstaller
 
-pyinstaller --windowed --onedir \
-  --name ExtratorCotacoesNiCE \
-  --add-data "utils/template.xlsx:utils" \
-  app.py
+pyinstaller --windowed --onedir --name ExtratorCotacoesNiCE --icon="utils/icon.icns" --add-data "utils/template.xlsx:utils" app.py
 ```
 
 Talvez peça para instalar o xcode caso você ainda não tenha, se pedir autorize.
@@ -78,7 +75,7 @@ venv\Scripts\activate
 pip install --upgrade pip
 pip install openpyxl pdfplumber pyinstaller
 
-pyinstaller --noconfirm --onefile --noconsole --name="Extrator_Cotações_NiCE" --add-data "utils\template.xlsx;utils" app.py
+pyinstaller --noconfirm --onefile --noconsole --name="Extrator_Cotações_NiCE" --icon="utils\icon.ico" --add-data "utils\template.xlsx;utils" --add-data "utils\icon.ico;utils" app.py
 ```
 ATENÇÃO: Se você já tiver um executavel aberto e tentar gerar um outro pode dar erro, sempre feche.
 
