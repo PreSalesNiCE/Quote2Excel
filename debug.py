@@ -5,7 +5,6 @@ from extractor import TITLES, LAYOUT, norm, parse_qty, parse_price, clean_sku
 def debug_pdf(pdf_path):
     current_section = None
     current_title = None
-    finished_titles = set()
 
     with pdfplumber.open(pdf_path) as pdf:
         for p_idx, page in enumerate(pdf.pages):
@@ -24,13 +23,9 @@ def debug_pdf(pdf_path):
                     print(f"    RAW: {row}")
 
                     if first_cell in TITLES:
-                        status = "JÁ FINALIZADO (ignorado)" if first_cell in finished_titles else "SEÇÃO ATIVADA"
-                        print(f"      -> TÍTULO reconhecido: '{first_cell}' -> {TITLES[first_cell]} [{status}]")
-                        if first_cell in finished_titles:
-                            current_section = None
-                        else:
-                            current_section = TITLES[first_cell]
-                            current_title = first_cell
+                        current_section = TITLES[first_cell]
+                        current_title = first_cell
+                        print(f"      -> TÍTULO reconhecido: '{first_cell}' -> {current_section} [SEÇÃO ATIVADA]")
                         continue
 
                     if first_cell in ("PRODUCT CODE", "PRODUCT", "CATALOG ID"):
@@ -53,10 +48,12 @@ def debug_pdf(pdf_path):
                     price = parse_price(row[-2])
                     print(f"      -> qty parseado: {row[-3]!r} -> {qty} | price parseado: {row[-2]!r} -> {price}")
 
+                    if qty is not None and qty < 0:
+                        print("      -> IGNORADO: quantidade negativa (ajuste/remoção)")
+                        continue
+
                     if qty is None or price is None:
-                        print(f"      -> DESCARTADO: qty ou price None. Seção '{current_title}' marcada como finalizada.")
-                        if current_title is not None:
-                            finished_titles.add(current_title)
+                        print(f"      -> DESCARTADO: qty ou price None. Seção '{current_title}' finalizada (current_section=None).")
                         current_section = None
                         continue
 
@@ -69,8 +66,7 @@ def debug_pdf(pdf_path):
                         product = norm(row[0])
 
                     if not product:
-                        print("      -> DESCARTADO: product vazio, seção finalizada")
-                        finished_titles.add(current_title)
+                        print("      -> DESCARTADO: product vazio, seção finalizada (current_section=None)")
                         current_section = None
                         continue
 

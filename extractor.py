@@ -47,9 +47,13 @@ TITLES = {
     "SOFTWARE USAGE PRODUCTS": "usage",
     "DEDICATED NETWORK CONNECTIVITY MRC": "connectivity_mrc",
     "DEDICATED NETWORK CONNECTIVITY NRC": "connectivity_nrc",
+    "NETWORK CONNECTIVITY NRC": "connectivity_nrc",
+    "MONTHLY NETWORK CONNECTIVITY SUBSCRIPTIONS": "connectivity_mrc",
+
     
     # Novas Seções Adicionadas
     "PER USER/UNIT SUBSCRIPTIONS": "mrc",
+    "NICE SUBSCRIPTIONS": "mrc",
     "PER BU SUBSCRIPTIONS": "nrc",
     "CONSULTING": "nrc",
     "USAGE PRODUCTS": "usage",
@@ -126,11 +130,8 @@ def extract_pdf(pdf_path):
                     first_cell = norm(row[0]).upper()
 
                     if first_cell in TITLES:
-                        if first_cell in finished_titles:
-                            current_section = None
-                        else:
-                            current_section = TITLES[first_cell]
-                            current_title = first_cell
+                        current_section = TITLES[first_cell]
+                        current_title = first_cell
                         continue
 
                     if first_cell in ("PRODUCT CODE", "PRODUCT", "CATALOG ID"):
@@ -148,9 +149,10 @@ def extract_pdf(pdf_path):
                     qty = parse_qty(row[-3])
                     price = parse_price(row[-2])
 
+                    if qty is not None and qty < 0:
+                        continue
+
                     if qty is None or price is None:
-                        if current_title is not None:
-                            finished_titles.add(current_title)
                         current_section = None
                         continue
 
@@ -159,11 +161,14 @@ def extract_pdf(pdf_path):
                         sku = clean_sku(row[0])
                         product = " ".join(norm(c) for c in row[1:-3] if norm(c))
                     else:
-                        sku = ""
-                        product = norm(row[0])
-
+                        if len(row) > 1 and norm(row[1]):
+                            sku = clean_sku(row[0])
+                            product = " ".join(norm(c) for c in row[1:-3] if norm(c))
+                        else:
+                            sku = ""
+                            product = norm(row[0])
+                            
                     if not product:
-                        finished_titles.add(current_title)
                         current_section = None
                         continue
 
