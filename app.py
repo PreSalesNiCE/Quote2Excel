@@ -70,15 +70,20 @@ tk.Entry(root, textvariable=pdf_var, width=60).pack()
 
 tk.Button(root, text="Selecionar PDF", command=selecionar_pdf).pack(pady=10)
 
-tk.Button(
+btn_gerar = tk.Label(
     root,
     text="Gerar Excel",
-    command=gerar_excel,
-    height=2,
-    width=20,
     bg="#0d6efd",
     fg="white",
-    font=("Arial", 10, "bold")
-).pack()
+    font=("Arial", 10, "bold"),
+    width=20,
+    height=2,
+    cursor="hand2"
+)
+btn_gerar.pack(pady=(10, 0))
+btn_gerar.bind("<Button-1>", lambda e: gerar_excel())
+
+btn_gerar.bind("<Enter>", lambda e: btn_gerar.config(bg="#0b5ed7"))
+btn_gerar.bind("<Leave>", lambda e: btn_gerar.config(bg="#0d6efd"))
 
 root.mainloop()
