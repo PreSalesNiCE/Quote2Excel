@@ -48,7 +48,16 @@ Outras causas comuns de linha descartada: preço com prefixo de moeda não trata
 
 ## Gerar executável no Mac
 
-No Terminal, dentro da pasta raiz do projeto:
+**IMPORTANTE**
+Antes de gerar instale xcode pelo terminal
+
+```bash
+xcode-select --install
+```
+
+Esse comando vai abrir um pop-up onde você irá instalar o xcode para conseguir gerar o executável no Mac.
+
+No Terminal, vá até a pasta raiz do projeto e execute os comandos no terminal:
 
 ```bash
 python3 -m venv venv
@@ -59,9 +68,7 @@ pip install openpyxl pdfplumber pyinstaller
 pyinstaller --windowed --onedir --name ExtratorCotacoesNiCE --icon="utils/icon.icns" --add-data "utils/template.xlsx:utils" app.py
 ```
 
-Talvez peça para instalar o xcode caso você ainda não tenha, se pedir autorize.
-
-O resultado fica em `dist/ExtratorCotacoesNiCE.app`.
+O executável fica em `dist/ExtratorCotacoesNiCE.app`.
 
 ATENÇÃO: Se você já tiver um executavel aberto e tentar gerar um outro pode dar erro, sempre feche.
 
